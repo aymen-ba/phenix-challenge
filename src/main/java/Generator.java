@@ -2,8 +2,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 public class Generator {
@@ -29,16 +32,26 @@ public class Generator {
         this.storeIds = new String[this.nbStores];
         this.rd = new Random();
 
-        new File("data").mkdirs();
-        new File("temp").mkdirs();
-        new File("output").mkdirs();
 
-        generatestoreIds();
-
-        String[] days = {"20190623","20190624","20190625","20190626","20190627","20190628","20190629"};
+        generateStoreIds();
 
         if(lastSevenDays){
-            for(String day: days){
+            // get dates of the six days before processDate
+            DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+            String[] dates = new String[7];
+            long DAY_IN_MS = 1000 * 60 * 60 * 24;
+            for(int i = 0; i < 7; i++){
+
+                Date day = null;
+                try {
+                    day = new Date(dateFormat.parse(date).getTime() - ( (6 - i ) * DAY_IN_MS));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                dates[i] = dateFormat.format(day);
+            }
+
+            for(String day: dates){
 
                 for(String storeId: storeIds)
                     generateStoreProductsReferenceFile(storeId, day);
@@ -57,7 +70,7 @@ public class Generator {
 
 
 
-    public void generatestoreIds(){
+    public void generateStoreIds(){
 
         byte[] arr = new byte[16];
         String storeId = "";
@@ -84,7 +97,9 @@ public class Generator {
     public void generateStoreProductsReferenceFile(String storeId, String day){
 
         // create reference product file: reference-prod-idMagasin_YYYYMMDD.data
-        File file = new File("data/reference_prod-"+ storeId + "_" + day + ".data");
+        new File("data").mkdirs();
+
+        File file = new File("data/reference_prod-" + storeId + "_" + day + ".data");
         try {
             file.createNewFile();
         } catch (IOException e) {
@@ -94,7 +109,7 @@ public class Generator {
         String line = "";
         FileWriter fw = null;
         try {
-            fw = new FileWriter("data/reference_prod-"+ storeId + "_" + day + ".data");
+            fw = new FileWriter("data/reference_prod-" + storeId + "_" + day + ".data");
         } catch (IOException e) {
             e.printStackTrace();
         }

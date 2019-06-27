@@ -68,6 +68,11 @@ public class Calculator {
 
     // Compute the 100 best Sales/day/store
     public static void getBestSaleStore(String inputFile, String regex, String outputPath) {
+
+        if (!Files.exists(Paths.get(outputPath))) {
+            new File(outputPath).mkdirs();
+        }
+
         Set<Transaction> transactions = new HashSet<>();
         Map<String, String> totalByProduitSorted = new LinkedHashMap<>();
 

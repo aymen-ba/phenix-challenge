@@ -10,15 +10,13 @@ public class GeneratorTest {
 
 
     @Test
-    public void testGenerategeneratestoreIds() throws Exception {
+    public void testGenerateStoreIds() throws Exception {
 
-        Compactionner.deleteDirectory(new File("data"));
-
-        Generator g = new Generator(1200, 1000, 1000000, "20190629",false);
+        Generator g = new Generator(2, 5, 10, "20190629",true);
 
         List<String> ids = Calculator.getAllStoresIds("data", Main.REGEX_UUID_DATE, Main.REGEX_UUID, Main.REGEX_DATE, "20190629");
 
-        assertEquals(ids.size(), 1200);
+        assertEquals(ids.size(), 2);
 
         Compactionner.deleteDirectory(new File("data"));
     }
@@ -27,7 +25,7 @@ public class GeneratorTest {
     @Test
     public void testgenerateTransactionsDay() {
 
-        Generator g = new Generator(1200, 1000, 1000000, "20190629", false);
+        Generator g = new Generator(20, 100, 1000, "20190629", false);
 
         File transactionFile = new File("data/transactions_" + "20190629" + ".data");
 
