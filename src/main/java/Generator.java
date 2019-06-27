@@ -20,7 +20,7 @@ public class Generator {
 
 
 
-    public Generator(int nbStores, int nbProductsByStore, long nbTransactionsByDay, String date){
+    public Generator(int nbStores, int nbProductsByStore, long nbTransactionsByDay, String date, Boolean lastSevenDays){
 
         this.nbStores = nbStores;
         this.nbProductsByStore = nbProductsByStore;
@@ -29,12 +29,29 @@ public class Generator {
         this.storeIds = new String[this.nbStores];
         this.rd = new Random();
 
+        new File("data").mkdirs();
+        new File("temp").mkdirs();
+        new File("output").mkdirs();
+
         generatestoreIds();
 
-        for(String storeId: storeIds)
-            generateStoreProductsReferenceFile(storeId, date);
+        String[] days = {"20190623","20190624","20190625","20190626","20190627","20190628","20190629"};
 
-        generateTransactionsFile(date);
+        if(lastSevenDays){
+            for(String day: days){
+
+                for(String storeId: storeIds)
+                    generateStoreProductsReferenceFile(storeId, day);
+
+                generateTransactionsFile(day);
+            }
+
+        } else {
+            for(String storeId: storeIds)
+                generateStoreProductsReferenceFile(storeId, date);
+
+            generateTransactionsFile(date);
+        }
 
     }
 
@@ -67,7 +84,6 @@ public class Generator {
     public void generateStoreProductsReferenceFile(String storeId, String day){
 
         // create reference product file: reference-prod-idMagasin_YYYYMMDD.data
-        new File("data").mkdirs();
         File file = new File("data/reference_prod-"+ storeId + "_" + day + ".data");
         try {
             file.createNewFile();
