@@ -24,11 +24,15 @@ public class Main {
 
     public static String REGEX_UUID_DATE = REGEX_UUID + "\\_" +REGEX_DATE;
 
+    public String concatAndConvertString(String str1, String str2){
+        String concatedString=str1.concat(str2);
+        return concatedString.toUpperCase();
+    }
+
 
     public static void main(String[] args) {
 
         logger.info("program start");
-
 
         /* verify program arguments
          *
@@ -48,9 +52,6 @@ public class Main {
                     "processDate");
             System.exit(0);
         }
-
-
-
 
 
 
